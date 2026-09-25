@@ -1,0 +1,447 @@
+{
+ "n_samples": 3000,
+ "alpha_min": 128,
+ "note": "alpha 三态模板：盒级 q_box × 面级 {full, partial, fill}。base 层无盒级开关（条件=无条件）；padding 恒 0 不在此表",
+ "q_box": {
+  "hat": 0.9017,
+  "body_ov": 0.5793,
+  "rarm_ov": 0.5833,
+  "rleg_ov": 0.5623,
+  "larm_ov": 0.5773,
+  "lleg_ov": 0.565
+ },
+ "faces": {
+  "body.back": {
+   "full": 0.995,
+   "partial": 0.0037,
+   "fill": 0.7301,
+   "px": 0.9977
+  },
+  "body.bottom": {
+   "full": 0.9823,
+   "partial": 0.003,
+   "fill": 0.6597,
+   "px": 0.9843
+  },
+  "body.front": {
+   "full": 0.993,
+   "partial": 0.007,
+   "fill": 0.8006,
+   "px": 0.9986
+  },
+  "body.left": {
+   "full": 0.9877,
+   "partial": 0.0037,
+   "fill": 0.7027,
+   "px": 0.9902
+  },
+  "body.right": {
+   "full": 0.988,
+   "partial": 0.0053,
+   "fill": 0.6693,
+   "px": 0.9916
+  },
+  "body.top": {
+   "full": 0.979,
+   "partial": 0.009,
+   "fill": 0.7951,
+   "px": 0.9862
+  },
+  "body_ov.back": {
+   "full": 0.1168,
+   "partial": 0.6594,
+   "fill": 0.3128,
+   "px": 0.323
+  },
+  "body_ov.bottom": {
+   "full": 0.0759,
+   "partial": 0.1467,
+   "fill": 0.2695,
+   "px": 0.1155
+  },
+  "body_ov.front": {
+   "full": 0.0633,
+   "partial": 0.8487,
+   "fill": 0.2762,
+   "px": 0.2977
+  },
+  "body_ov.left": {
+   "full": 0.1059,
+   "partial": 0.359,
+   "fill": 0.233,
+   "px": 0.1895
+  },
+  "body_ov.right": {
+   "full": 0.1041,
+   "partial": 0.3619,
+   "fill": 0.2334,
+   "px": 0.1886
+  },
+  "body_ov.top": {
+   "full": 0.0604,
+   "partial": 0.3101,
+   "fill": 0.3559,
+   "px": 0.1708
+  },
+  "hat.back": {
+   "full": 0.1279,
+   "partial": 0.6924,
+   "fill": 0.4301,
+   "px": 0.4257
+  },
+  "hat.bottom": {
+   "full": 0.0599,
+   "partial": 0.4758,
+   "fill": 0.3336,
+   "px": 0.2186
+  },
+  "hat.front": {
+   "full": 0.0403,
+   "partial": 0.8773,
+   "fill": 0.4373,
+   "px": 0.424
+  },
+  "hat.left": {
+   "full": 0.061,
+   "partial": 0.8499,
+   "fill": 0.3703,
+   "px": 0.3757
+  },
+  "hat.right": {
+   "full": 0.0621,
+   "partial": 0.8481,
+   "fill": 0.3699,
+   "px": 0.3758
+  },
+  "hat.top": {
+   "full": 0.136,
+   "partial": 0.5908,
+   "fill": 0.3428,
+   "px": 0.3386
+  },
+  "head.back": {
+   "full": 0.9957,
+   "partial": 0.0027,
+   "fill": 0.5508,
+   "px": 0.9971
+  },
+  "head.bottom": {
+   "full": 0.9887,
+   "partial": 0.0087,
+   "fill": 0.5956,
+   "px": 0.9938
+  },
+  "head.front": {
+   "full": 0.9957,
+   "partial": 0.0043,
+   "fill": 0.7728,
+   "px": 0.999
+  },
+  "head.left": {
+   "full": 0.9953,
+   "partial": 0.0023,
+   "fill": 0.7254,
+   "px": 0.997
+  },
+  "head.right": {
+   "full": 0.9967,
+   "partial": 0.0017,
+   "fill": 0.6312,
+   "px": 0.9977
+  },
+  "head.top": {
+   "full": 0.9973,
+   "partial": 0.0003,
+   "fill": 0.2812,
+   "px": 0.9974
+  },
+  "larm.back": {
+   "full": 0.7233,
+   "partial": 0.2753,
+   "fill": 0.5076,
+   "px": 0.8631
+  },
+  "larm.bottom": {
+   "full": 0.725,
+   "partial": 0.2703,
+   "fill": 0.4998,
+   "px": 0.8601
+  },
+  "larm.front": {
+   "full": 0.994,
+   "partial": 0.006,
+   "fill": 0.6458,
+   "px": 0.9979
+  },
+  "larm.left": {
+   "full": 0.992,
+   "partial": 0.0067,
+   "fill": 0.6771,
+   "px": 0.9965
+  },
+  "larm.right": {
+   "full": 0.987,
+   "partial": 0.0043,
+   "fill": 0.6603,
+   "px": 0.9899
+  },
+  "larm.top": {
+   "full": 0.9937,
+   "partial": 0.004,
+   "fill": 0.7344,
+   "px": 0.9966
+  },
+  "larm_ov.back": {
+   "full": 0.0364,
+   "partial": 0.9145,
+   "fill": 0.2364,
+   "px": 0.2526
+  },
+  "larm_ov.bottom": {
+   "full": 0.0629,
+   "partial": 0.1513,
+   "fill": 0.4311,
+   "px": 0.1281
+  },
+  "larm_ov.front": {
+   "full": 0.0421,
+   "partial": 0.9232,
+   "fill": 0.2972,
+   "px": 0.3165
+  },
+  "larm_ov.left": {
+   "full": 0.0427,
+   "partial": 0.9111,
+   "fill": 0.325,
+   "px": 0.3388
+  },
+  "larm_ov.right": {
+   "full": 0.0358,
+   "partial": 0.6132,
+   "fill": 0.2946,
+   "px": 0.2164
+  },
+  "larm_ov.top": {
+   "full": 0.1363,
+   "partial": 0.2032,
+   "fill": 0.432,
+   "px": 0.2241
+  },
+  "lleg.back": {
+   "full": 0.9933,
+   "partial": 0.006,
+   "fill": 0.5613,
+   "px": 0.9967
+  },
+  "lleg.bottom": {
+   "full": 0.99,
+   "partial": 0.0027,
+   "fill": 0.4922,
+   "px": 0.9913
+  },
+  "lleg.front": {
+   "full": 0.9937,
+   "partial": 0.006,
+   "fill": 0.6319,
+   "px": 0.9975
+  },
+  "lleg.left": {
+   "full": 0.9923,
+   "partial": 0.0053,
+   "fill": 0.7005,
+   "px": 0.9961
+  },
+  "lleg.right": {
+   "full": 0.9813,
+   "partial": 0.007,
+   "fill": 0.6458,
+   "px": 0.9859
+  },
+  "lleg.top": {
+   "full": 0.982,
+   "partial": 0.0027,
+   "fill": 0.5859,
+   "px": 0.9836
+  },
+  "lleg_ov.back": {
+   "full": 0.072,
+   "partial": 0.8442,
+   "fill": 0.2935,
+   "px": 0.3198
+  },
+  "lleg_ov.bottom": {
+   "full": 0.2962,
+   "partial": 0.2566,
+   "fill": 0.5316,
+   "px": 0.4326
+  },
+  "lleg_ov.front": {
+   "full": 0.0684,
+   "partial": 0.8891,
+   "fill": 0.2984,
+   "px": 0.3337
+  },
+  "lleg_ov.left": {
+   "full": 0.069,
+   "partial": 0.8448,
+   "fill": 0.3101,
+   "px": 0.331
+  },
+  "lleg_ov.right": {
+   "full": 0.0596,
+   "partial": 0.5876,
+   "fill": 0.231,
+   "px": 0.1953
+  },
+  "lleg_ov.top": {
+   "full": 0.0909,
+   "partial": 0.1274,
+   "fill": 0.3452,
+   "px": 0.1348
+  },
+  "rarm.back": {
+   "full": 0.724,
+   "partial": 0.275,
+   "fill": 0.5082,
+   "px": 0.8638
+  },
+  "rarm.bottom": {
+   "full": 0.7257,
+   "partial": 0.2697,
+   "fill": 0.5006,
+   "px": 0.8607
+  },
+  "rarm.front": {
+   "full": 0.9913,
+   "partial": 0.0087,
+   "fill": 0.7204,
+   "px": 0.9976
+  },
+  "rarm.left": {
+   "full": 0.9863,
+   "partial": 0.0063,
+   "fill": 0.6086,
+   "px": 0.9902
+  },
+  "rarm.right": {
+   "full": 0.9933,
+   "partial": 0.0057,
+   "fill": 0.6642,
+   "px": 0.9971
+  },
+  "rarm.top": {
+   "full": 0.9933,
+   "partial": 0.0047,
+   "fill": 0.7187,
+   "px": 0.9967
+  },
+  "rarm_ov.back": {
+   "full": 0.0371,
+   "partial": 0.916,
+   "fill": 0.2485,
+   "px": 0.2648
+  },
+  "rarm_ov.bottom": {
+   "full": 0.06,
+   "partial": 0.1526,
+   "fill": 0.4464,
+   "px": 0.1281
+  },
+  "rarm_ov.front": {
+   "full": 0.04,
+   "partial": 0.9206,
+   "fill": 0.2786,
+   "px": 0.2965
+  },
+  "rarm_ov.left": {
+   "full": 0.0354,
+   "partial": 0.6686,
+   "fill": 0.278,
+   "px": 0.2213
+  },
+  "rarm_ov.right": {
+   "full": 0.0434,
+   "partial": 0.9114,
+   "fill": 0.321,
+   "px": 0.336
+  },
+  "rarm_ov.top": {
+   "full": 0.1343,
+   "partial": 0.212,
+   "fill": 0.4225,
+   "px": 0.2239
+  },
+  "rleg.back": {
+   "full": 0.9933,
+   "partial": 0.0057,
+   "fill": 0.5944,
+   "px": 0.9967
+  },
+  "rleg.bottom": {
+   "full": 0.9917,
+   "partial": 0.0017,
+   "fill": 0.675,
+   "px": 0.9928
+  },
+  "rleg.front": {
+   "full": 0.993,
+   "partial": 0.0067,
+   "fill": 0.6688,
+   "px": 0.9975
+  },
+  "rleg.left": {
+   "full": 0.982,
+   "partial": 0.0067,
+   "fill": 0.6917,
+   "px": 0.9866
+  },
+  "rleg.right": {
+   "full": 0.993,
+   "partial": 0.006,
+   "fill": 0.6574,
+   "px": 0.9969
+  },
+  "rleg.top": {
+   "full": 0.9827,
+   "partial": 0.002,
+   "fill": 0.7396,
+   "px": 0.9841
+  },
+  "rleg_ov.back": {
+   "full": 0.0694,
+   "partial": 0.8471,
+   "fill": 0.2966,
+   "px": 0.3206
+  },
+  "rleg_ov.bottom": {
+   "full": 0.3005,
+   "partial": 0.259,
+   "fill": 0.5279,
+   "px": 0.4373
+  },
+  "rleg_ov.front": {
+   "full": 0.0682,
+   "partial": 0.8975,
+   "fill": 0.2964,
+   "px": 0.3341
+  },
+  "rleg_ov.left": {
+   "full": 0.0593,
+   "partial": 0.5892,
+   "fill": 0.2311,
+   "px": 0.1954
+  },
+  "rleg_ov.right": {
+   "full": 0.0688,
+   "partial": 0.8453,
+   "fill": 0.3116,
+   "px": 0.3322
+  },
+  "rleg_ov.top": {
+   "full": 0.0913,
+   "partial": 0.1316,
+   "fill": 0.3491,
+   "px": 0.1372
+  }
+ }
+}

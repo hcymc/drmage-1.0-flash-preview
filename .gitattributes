@@ -1,0 +1,7 @@
+# 二进制与生成文件不做行尾转换
+*.pt binary
+*.npy binary
+*.npz binary
+*.png binary
+*.zip binary
+* text=auto

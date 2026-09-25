@@ -1,0 +1,24 @@
+train: gen 8000 / real 8000 → 用 8000 对 | val: gen 1333 / real 1333
+判别器参数 242K
+epoch 1/4 | train_loss 0.6127 | val AUC 0.5020 | real score med 0.491 | gen score med 0.481
+epoch 2/4 | train_loss 0.5269 | val AUC 0.4950 | real score med 0.500 | gen score med 0.499
+epoch 3/4 | train_loss 0.4433 | val AUC 0.4907 | real score med 0.495 | gen score med 0.511
+epoch 4/4 | train_loss 0.3514 | val AUC 0.4900 | real score med 0.533 | gen score med 0.559
+saved K:\drmage-1.0-flash-preview\models\lottery_scorer\latest.pt | AUC 0.4900
+TRAIN_DONE
+train: gen 8000 / real 8000 → 用 8000 对 | val: gen 1333 / real 1333
+判别器参数 766K
+epoch 1/12 | train_loss 0.6765 | val AUC 0.6924 | real score med 0.517 | gen score med 0.420 | gen spread p10-p90 [0.275, 0.563]
+epoch 2/12 | train_loss 0.6342 | val AUC 0.7286 | real score med 0.559 | gen score med 0.390 | gen spread p10-p90 [0.229, 0.623]
+epoch 3/12 | train_loss 0.5931 | val AUC 0.7851 | real score med 0.670 | gen score med 0.381 | gen spread p10-p90 [0.175, 0.671]
+epoch 4/12 | train_loss 0.5524 | val AUC 0.8010 | real score med 0.562 | gen score med 0.214 | gen spread p10-p90 [0.070, 0.537]
+epoch 5/12 | train_loss 0.5032 | val AUC 0.8206 | real score med 0.488 | gen score med 0.124 | gen spread p10-p90 [0.029, 0.430]
+epoch 6/12 | train_loss 0.4593 | val AUC 0.8491 | real score med 0.756 | gen score med 0.189 | gen spread p10-p90 [0.030, 0.656]
+epoch 7/12 | train_loss 0.4220 | val AUC 0.8387 | real score med 0.665 | gen score med 0.090 | gen spread p10-p90 [0.009, 0.515]
+epoch 8/12 | train_loss 0.3774 | val AUC 0.8335 | real score med 0.794 | gen score med 0.261 | gen spread p10-p90 [0.028, 0.773]
+epoch 9/12 | train_loss 0.3492 | val AUC 0.8172 | real score med 0.781 | gen score med 0.314 | gen spread p10-p90 [0.029, 0.779]
+epoch 10/12 | train_loss 0.3150 | val AUC 0.8241 | real score med 0.726 | gen score med 0.171 | gen spread p10-p90 [0.013, 0.687]
+epoch 11/12 | train_loss 0.2939 | val AUC 0.8327 | real score med 0.748 | gen score med 0.055 | gen spread p10-p90 [0.002, 0.648]
+epoch 12/12 | train_loss 0.2722 | val AUC 0.8266 | real score med 0.536 | gen score med 0.022 | gen spread p10-p90 [0.001, 0.399]
+saved K:\drmage-1.0-flash-preview\models\lottery_scorer\latest.pt | AUC 0.8491
+TRAIN_DONE

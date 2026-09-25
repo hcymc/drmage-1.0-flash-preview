@@ -1,0 +1,15 @@
+管线消融：训练快照 vs 推理（同一权重 ema.pt / 同 10 条 val 条件 / 同 x_T 噪声）
+
+时间线证据：mask_bank.npz 生成于 09-23 23:52，晚于训练结束（ema.pt 09-23 18:53），
+→ 整个 diff_v2_masked 训练期间 epoch 末快照的第二层 alpha 全部为 template 合成
+（脚本 sample_alpha_bank 缺库自动回落 template），与推理端现在的 retrieval 不同。
+
+条件向量本身：训练快照与推理「真实抽样」都取自 val_cond，同源同分布，无差异；
+本权重 alpha_input=False（模型不吃 mask 输入）、无 CFG（cfg=1.0），两侧一致。
+→ 「第二层」对模型不是条件，是显示层：mask 决定模型画好的 RGB 中哪些像素露出来。
+
+两管线全部差异 = ① mask 来源 ② 量化 ③ 破洞修补 ④ DDIM 步数（快照固定 50）。
+sheet.png 分两个区块（第一层 / 第二层单独渲染）逐项消融：
+  第二层区块：行0/行A（template）= 椒盐碎屑；行B（retrieval）= 连通衣物片——
+  最大单项收益就是 mask 来源；行C/D/E（量化/修补/DDIM252）对形状影响很小。
+  第一层区块：各行几乎一致——第一层观感本来就没差，权重零变化。

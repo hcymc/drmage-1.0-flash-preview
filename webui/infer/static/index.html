@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>drmage 实验台 · 推理平台</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="logo">d</div>
+    <div class="brandtxt">
+      <div class="bname">drmage<span class="v">-1.0-flash-preview</span></div>
+      <div class="bsub" id="brandSub">加载中…</div>
+    </div>
+  </div>
+  <div class="topright">
+    <div class="chips" id="chips">
+      <span class="chip" id="chipGpu">GPU —</span>
+      <span class="chip" id="chipTrain">训练 —</span>
+    </div>
+    <label class="sel">
+      <span>权重</span>
+      <select id="ckptSel"></select>
+    </label>
+    <button class="btn ghost" id="btnReload" title="重新载入权重文件（权重被覆盖时用）">↻ 重载</button>
+    <button class="btn ghost" id="btnTheme" title="切换主题">◐</button>
+  </div>
+</header>
+
+<main>
+  <aside class="panel" id="panel">
+    <section class="sec">
+      <h3>条件来源</h3>
+      <div class="seg" id="condMode">
+        <button class="on" data-v="spec">滑块合成</button>
+        <button data-v="real">真实抽样</button>
+        <button data-v="lottery">抽奖模式</button>
+      </div>
+      <p class="hint" id="condHint">用下面的滑块拼一份条件向量，整批复制。</p>
+    </section>
+
+    <section class="sec" id="specBox">
+      <h3>配色 / 风格</h3>
+
+      <div class="rw"><span>主导色相</span><b id="vHue">15°</b></div>
+      <input type="range" id="sHue" min="0" max="360" step="1" value="15">
+      <div class="huebar" aria-hidden="true"></div>
+
+      <div class="two">
+        <div>
+          <div class="rw"><span>色相集中度</span><b id="vSpread">0.18</b></div>
+          <input type="range" id="sSpread" min="0.02" max="0.6" step="0.01" value="0.18">
+        </div>
+        <div>
+          <div class="rw"><span>饱和度</span><b id="vSat">0.45</b></div>
+          <input type="range" id="sSat" min="0" max="1" step="0.01" value="0.45">
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <div class="rw"><span>明度</span><b id="vVal">0.55</b></div>
+          <input type="range" id="sVal" min="0" max="1" step="0.01" value="0.55">
+        </div>
+        <div>
+          <div class="rw"><span>暗色占比</span><b id="vDark">0.25</b></div>
+          <input type="range" id="sDark" min="0" max="1" step="0.01" value="0.25">
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <div class="rw"><span>亮色占比</span><b id="vBright">0.25</b></div>
+          <input type="range" id="sBright" min="0" max="1" step="0.01" value="0.25">
+        </div>
+        <div>
+          <div class="rw"><span>中性色占比</span><b id="vNeutral">0.10</b></div>
+          <input type="range" id="sNeutral" min="0" max="1" step="0.01" value="0.10">
+        </div>
+      </div>
+
+      <div class="three">
+        <label class="sel block"><span>色调</span><select id="selTone"></select></label>
+        <label class="sel block"><span>饱和档</span><select id="selSatCls"></select></label>
+        <label class="sel block"><span>复杂度</span><select id="selCpx"></select></label>
+      </div>
+
+      <label class="chk"><input type="checkbox" id="cbOverlay" checked>
+        <span>overlay_used = true</span></label>
+      <p class="hint warn">条件向量第 31/32 维（overlay_used、transparent_ratio）在当前架构下是
+        <b>死旋钮</b>：alpha 已改由 UV 模板生成，模型不产出 alpha，改它们不影响输出。</p>
+      <p class="hint">骨架固定 classic（Steve，4px 手臂）。训练集 100% classic，slim 属外推，本版不支持。</p>
+    </section>
+
+    <section class="sec" id="realBox" hidden>
+      <h3>真实条件抽样</h3>
+      <div class="rw"><span>张数</span><b id="vRealN">8</b></div>
+      <input type="range" id="sRealN" min="1" max="24" step="1" value="8">
+      <label class="chk"><input type="checkbox" id="cbTone" checked>
+        <span>跟随上方「色调」筛选</span></label>
+      <p class="hint">从 <b>val 集 13,200 条真实条件</b>里随机抽，每张条件都不同。
+        看的是「模型能不能复现真实分布」，不是「能不能听指挥」。</p>
+      <button class="btn ghost wide" id="btnReal">刷新真实对照条</button>
+    </section>
+
+    <section class="sec" id="lotteryBox" hidden>
+      <h3>抽奖模式</h3>
+      <label class="sel block"><span>真实条件抽取数（候选）</span>
+        <select id="selPool">
+          <option value="16">16 张（最快）</option>
+          <option value="32">32 张</option>
+          <option value="48">48 张</option>
+          <option value="64" selected>64 张（推荐）</option>
+          <option value="96">96 张</option>
+          <option value="128">128 张（最稳）</option>
+        </select></label>
+      <label class="sel block"><span>生成批量</span>
+        <select id="selBatch">
+          <option value="16">16</option>
+          <option value="32" selected>32</option>
+          <option value="48">48</option>
+          <option value="64">64</option>
+          <option value="96">96</option>
+          <option value="128">128</option>
+        </select></label>
+      <label class="sel block"><span>最终输出（评分 top-K）</span>
+        <input type="number" id="inFinalK" min="1" max="15" step="1" value="4"></label>
+      <label class="chk"><input type="checkbox" id="cbToneLot">
+        <span>按色调筛选候选条件</span></label>
+      <label class="sel block" id="toneLotWrap" hidden><span>色调</span>
+        <select id="selToneLot"></select></label>
+      <p class="hint" id="lotEst">预计耗时 —</p>
+      <p class="hint">从 val 集抽 <b>N 条真实条件</b>各生成一张，由<b>学习型评分器</b>
+        （小判别器：真实皮肤 vs 生成皮肤，评分 = P(像真的)；缺权重时回落手搓规则分）
+        挑出「最终输出」张。评分依据与训练见 <b>docs/LOTTERY.md</b>。
+        种子相同 → 结果一致；<b>批量只影响速度与显存，不影响抽中的结果</b>
+        （差异仅为 GPU 浮点噪声）。建议保持「自适应量化」开启——
+        不量化的原始输出色数会爆到 1000+，观感和评分都差。</p>
+    </section>
+
+    <section class="sec">
+      <h3>采样</h3>
+      <div id="batchRow">
+        <div class="rw"><span>批量</span><b id="vN">8</b></div>
+        <input type="range" id="sN" min="1" max="32" step="1" value="8">
+      </div>
+      <div class="rw"><span>DDIM 步数</span><b id="vDdim">100</b></div>
+      <input type="range" id="sDdim" min="8" max="400" step="2" value="100">
+      <div class="rw"><span>η（随机性）</span><b id="vEta">0.00</b></div>
+      <input type="range" id="sEta" min="0" max="1" step="0.05" value="0">
+      <div class="seedrow">
+        <label class="sel grow"><span>随机种子</span><input type="number" id="inSeed" value="1234"></label>
+        <button class="btn ghost" id="btnSeed" title="换一个种子">🎲</button>
+      </div>
+      <label class="sel block"><span>alpha（第二层轮廓）</span><select id="selAlpha"></select></label>
+      <p class="hint">模型只输出 RGB（3 通道），alpha 由 UV 模板按真实频率抽。
+        <b>alpha=full</b> 能看模型画出的全部像素（含本该透明的区）。</p>
+    </section>
+
+    <section class="sec">
+      <h3>后处理</h3>
+      <label class="chk"><input type="checkbox" id="cbHeal" checked>
+        <span>破洞修补（第一层孤立透明像素自动填补）</span></label>
+      <p class="hint">第一层里被不透明像素包围的孤立/小片透明（游戏里渲染成「皮肤破洞」）
+        用周围颜色的均值逐层填上；连续空白逐层向内推进，避免糊成平均色。
+        第二层的留空是<b>合法状态</b>，不会被碰。面积 &gt;20px 的整片留白视为合法结构，保留。</p>
+      <label class="sel block"><span>量化方式</span><select id="selQuant"></select></label>
+      <div class="rw"><span>K（仅自适应用）</span><b id="vK">64</b></div>
+      <input type="range" id="sK" min="8" max="128" step="4" value="64">
+      <p class="hint" id="quantNote">量化是<b>后处理</b>，不是模型结构——模型保持连续输出，量化最后兜底。</p>
+    </section>
+
+    <div class="runbar">
+      <button class="btn primary wide" id="btnGen">生成</button>
+      <label class="chk small"><input type="checkbox" id="cbForce">
+        <span>force（无视显存/训练检查）</span></label>
+      <div class="prog" id="prog" hidden><i></i></div>
+      <div class="err" id="err" hidden></div>
+    </div>
+  </aside>
+
+  <section class="stage">
+    <div class="bar">
+      <h2>最终输出 <small id="finalStat">抽奖模式的评分 top-K 会出现在这里</small></h2>
+    </div>
+    <div class="rail" id="finalRail" hidden><div class="empty small">—</div></div>
+
+    <div class="bar">
+      <h2>生成结果 <small id="statLine">—</small></h2>
+      <div class="bar-r">
+        <label class="sel" title="这一个开关同时管两件事：缩略图/大图怎么显示，以及导出 zip 里放几层。">
+          <span>层</span>
+          <select id="selLayer">
+            <option value="all">含第二层（全部）</option>
+            <option value="base">仅第一层（基础）</option>
+          </select>
+        </label>
+        <button class="btn ghost" id="btnAll3D">换平面缩略图</button>
+        <button class="btn ghost" id="btnExport" disabled>⬇ 导出 zip</button>
+      </div>
+    </div>
+    <div class="grid" id="genGrid">
+      <div class="empty">还没有生成。左边调好参数，点「生成」。</div>
+    </div>
+
+    <div class="bar">
+      <h2>真实对照 <small id="realStat">—</small></h2>
+      <div class="bar-r"><span class="hint inline">来自 val 集（模型没训过）</span></div>
+    </div>
+    <div class="rail" id="realRail"><div class="empty small">加载中…</div></div>
+  </section>
+</main>
+
+<!-- 大图 / 3D 弹窗 -->
+<div class="modal" id="modal" hidden>
+  <div class="sheet" id="sheet">
+    <div class="mleft">
+      <canvas id="c3d" width="337" height="673"></canvas>
+      <div class="mctl">
+        <button class="btn tiny" data-view="front">正面</button>
+        <button class="btn tiny" data-view="right">右侧</button>
+        <button class="btn tiny" data-view="back">背面</button>
+        <button class="btn tiny" data-view="left">左侧</button>
+        <button class="btn tiny" data-view="top">俯视</button>
+        <button class="btn tiny" data-view="iso">等轴</button>
+        <label class="chk tiny" title="与结果区那个「层」下拉是同一个开关，改哪边都一样。">
+          <input type="checkbox" id="cbOv" checked><span>第二层</span></label>
+        <label class="chk tiny"><input type="checkbox" id="cbAuto"><span>自转</span></label>
+      </div>
+      <p class="hint center">拖拽旋转 · 滚轮缩放 · 双击复位</p>
+    </div>
+    <div class="mright">
+      <div class="mhead">
+        <b id="mTitle">皮肤</b>
+        <button class="btn tiny ghost" id="btnClose">✕</button>
+      </div>
+      <canvas id="cUV" width="320" height="320"></canvas>
+      <label class="chk tiny"><input type="checkbox" id="cbGrid" checked><span>UV 面网格</span></label>
+      <div class="mbody" id="mBody"></div>
+      <div class="mfoot">
+        <button class="btn primary" id="btnDl">⬇ 下载这张 PNG</button>
+        <button class="btn ghost" id="btnCopy">复制条件</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

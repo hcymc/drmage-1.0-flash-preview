@@ -1,0 +1,5 @@
+# 实测版本：Python 3.10 / Windows 10 / RTX 2080 SUPER 8GB
+# torch 装 CUDA 版（GPU 训练/推理）；CPU 也能跑，只是慢一个数量级
+torch==2.2.0
+numpy==1.26.4
+pillow>=10.0

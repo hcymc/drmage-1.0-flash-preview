@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>训练监控平台 · drmage-1.0-flash-preview</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-logo">◧</div>
+      <div class="brand-text">
+        <div class="brand-name">drmage-1.0-flash-preview · 训练监控平台</div>
+        <div class="brand-desc" id="brandDesc">Minecraft 皮肤生成 · 实验预览</div>
+      </div>
+    </div>
+
+    <div class="status-chip s-idle" id="statusChip">
+      <span class="dot"></span><span id="statusText">连接中…</span>
+    </div>
+
+    <select class="btn sm" id="runSelect" title="切换要查看的实验（默认跟随最新）"
+            style="padding:5px 8px;max-width:230px"></select>
+
+    <div class="spacer"></div>
+
+    <span class="clock" id="clock">--:--:--</span>
+    <span class="badge" id="sseBadge" title="实时推送通道状态">推送 —</span>
+
+    <div class="seg" id="themeSeg">
+      <button data-theme="dark" class="on">深色</button>
+      <button data-theme="light">浅色</button>
+    </div>
+
+    <button class="btn sm" id="btnNotify" title="告警时弹浏览器通知">🔔 通知关</button>
+    <button class="btn sm" id="btnControl">▶ 训练控制</button>
+    <button class="btn sm danger" id="btnStop" title="停止当前训练">■ 停止训练</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- KPI -->
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid">
+    <!-- ================= 左列 ================= -->
+    <div class="col">
+
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ico">📈</span>训练曲线
+            <span class="card-sub" id="chartSub"></span>
+          </div>
+          <div class="card-tools">
+            <div class="seg" id="chartTabs"></div>
+            <button class="btn sm" id="btnChartFit">自适应</button>
+            <button class="btn sm" id="btnChartRepaint" title="画布尺寸错位时强制重建位图并重画">重绘</button>
+            <button class="btn sm" id="btnChartPng">导出 PNG</button>
+          </div>
+        </div>
+        <div class="chart-legend" id="chartLegend"></div>
+        <div class="card-body" style="padding-top:6px">
+          <div class="chart-host" id="chartHost">
+            <canvas id="mainChart" height="260"></canvas>
+            <div class="chart-tip" id="chartTip"></div>
+          </div>
+          <div class="hint" id="chartHint" style="margin-top:8px"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ico">🖼️</span>训练样本快照
+            <span class="card-sub" id="sampleSub">固定噪声采样，不同步数可直接对比</span>
+          </div>
+          <div class="card-tools">
+            <button class="btn sm" id="btnSamplePrev">◀</button>
+            <span class="badge" id="sampleStepLabel">—</span>
+            <button class="btn sm" id="btnSampleNext">▶</button>
+            <button class="btn sm" id="btnSampleLatest">最新</button>
+            <button class="btn sm" id="btnSampleCompare">对比首帧</button>
+            <button class="btn sm" id="btnSampleBig">放大</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <input type="range" id="sampleRange" min="0" max="0" value="0" style="width:100%">
+          <div class="sample-view" style="margin-top:10px">
+            <img id="sampleImg" alt="样本快照" src="">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ico">🧑‍🎨</span>皮肤产出
+            <span class="card-sub" id="skinSub"></span>
+          </div>
+          <div class="card-tools">
+            <span class="hint" style="white-space:nowrap">样本批次</span>
+            <select class="btn sm" id="skinStepSel" style="max-width:260px;padding:4px 8px"></select>
+            <div class="seg" id="skinLayerSeg" title="第二层 = 帽子/上衣/袖/裤的外层叠加面">
+              <button data-ov="1" class="on">含第二层</button>
+              <button data-ov="0">仅第一层</button>
+            </div>
+            <div class="seg" id="skinViewSeg">
+              <button data-view="figure" class="on">人物视图</button>
+              <button data-view="uv">UV 展开</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="skin-grid" id="skinGrid"></div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ================= 右列 ================= -->
+    <div class="col">
+
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ico">🖥️</span>系统运行状态</div>
+          <div class="card-tools">
+            <span class="badge" id="sysUpdated">—</span>
+            <button class="btn sm" id="btnSysRepaint" title="系统曲线出现白块/错位时强制重画">重绘</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="gauges" id="gauges"></div>
+          <div class="metrics-list" id="sysMetrics"></div>
+          <div style="margin-top:14px" class="kv" id="hostInfo"></div>
+          <div class="chart-host" style="margin-top:14px">
+            <canvas id="sysChart" height="120"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ico">🔔</span>监控与系统消息</div>
+          <div class="card-tools">
+            <span class="badge err" id="evErr">0 严重</span>
+            <span class="badge warn" id="evWarn">0 警告</span>
+            <div class="seg" id="evFilter">
+              <button data-lv="" class="on">全部</button>
+              <button data-lv="warn">警告</button>
+              <button data-lv="error">严重</button>
+            </div>
+          </div>
+        </div>
+        <div class="events" id="events"><div class="empty">等待事件…</div></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ico">🎯</span>关键指标速览
+            <span class="card-sub" id="hlSub"></span>
+          </div>
+          <div class="card-tools"><button class="btn sm" id="btnHlRefresh">⟳</button></div>
+        </div>
+        <div class="card-body" style="padding-top:8px">
+          <div class="kv" id="highlights"></div>
+          <div class="hint" id="hlNote" style="margin-top:10px"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ico">🗂️</span>训练档案</div>
+        </div>
+        <div class="card-body" style="padding-top:8px">
+          <div class="kv" id="runInfo"></div>
+          <div style="margin-top:12px" class="scroll-x">
+            <table class="tbl" id="ckptTable"></table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ================= 底部：标签页 ================= -->
+  <section class="card" style="margin-top:14px">
+    <div class="card-head">
+      <div class="card-title"><span class="ico">📋</span>
+        <div class="seg" id="bottomTabs">
+          <button data-tab="logs" class="on">中文日志</button>
+          <button data-tab="reports">诊断报告</button>
+          <button data-tab="progress">训练进度表</button>
+          <button data-tab="server">服务日志</button>
+        </div>
+      </div>
+      <div class="card-tools" id="bottomTools"></div>
+    </div>
+    <div class="card-body" id="bottomBody"></div>
+  </section>
+
+  <footer class="foot">
+    <span>项目目录：<span class="mono" id="footRoot">—</span></span>
+    <span>服务：<span class="mono" id="footServer">—</span></span>
+    <span>采集间隔 <span class="mono" id="footTick">2.0s</span></span>
+    <span class="mute">只读监控 · 唯一会写入的是 <span class="mono">webui/</span> 目录</span>
+  </footer>
+</div>
+
+<!-- ============ 模态：放大查看 ============ -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">查看</h3>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn sm" id="modalClose">关闭</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ============ 模态：训练控制 ============ -->
+<div class="modal-bg" id="ctrlBg">
+  <div class="modal" style="max-width:820px">
+    <div class="modal-head">
+      <h3>▶ 训练控制</h3>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn sm" id="ctrlClose">关闭</button>
+    </div>
+    <div class="modal-body">
+      <div class="hint" style="margin-bottom:14px">
+        下面这些参数会拼成一条命令在项目根目录执行。默认值就是当前推荐的续训配置
+        （<b>掩码损失已默认开启</b>，用于修掉「第二层被灌黑」的问题）。
+      </div>
+      <div class="modal-grid">
+        <div class="field" style="grid-column:1/-1">
+          <label>训练预设 ★</label>
+          <select id="f-preset">
+            <option value="v21" selected>算法 v2.1（推荐）— v2 全部开关 + mask 与内容解耦（跨样本 + 形态扰动）</option>
+            <option value="v2">算法 v2（旧）— alpha 条件平面 + 部位级 overlay 四位 + overlay 加权 4× + FiLM/CFG</option>
+            <option value="v2_nocfg">v2 去 CFG（消融）— alpha 平面 + overlay 位 + 加权，不开 dropout/CFG</option>
+            <option value="baseline">基线（A/B 对照）— 纯掩码 MSE，不带任何 v2 开关</option>
+            <option value="">自定义 — 不套预设，只用下面的参数</option>
+          </select>
+          <span class="hint" id="f-presetHint"></span>
+        </div>
+        <div class="field">
+          <label>实验标签 tag</label>
+          <input id="f-tag" value="diff_v2_masked">
+          <span class="hint">默认 = <b>当前实验</b>（接着同一条线跑，指标/日志/断点连续）；产物落在 models/&lt;tag&gt;、logs/&lt;tag&gt;</span>
+        </div>
+        <div class="field">
+          <label>续训断点</label>
+          <select id="f-resume"><option value="">从头训练</option></select>
+          <span class="hint">默认填<b>当前实验</b>自己的 latest.pt；换成别的实验的断点就是跨实验续训</span>
+        </div>
+        <div class="field">
+          <label>目标轮数 epochs</label>
+          <input id="f-epochs" type="number" value="200" min="1" max="5000">
+          <span class="hint" id="f-epochsHint"></span>
+        </div>
+        <div class="field">
+          <label>批大小 batch</label>
+          <input id="f-batch" type="number" value="48" min="1" max="512">
+        </div>
+        <div class="field">
+          <label>模型宽度 base</label>
+          <input id="f-base" type="number" value="64" min="8" max="512">
+        </div>
+        <div class="field">
+          <label>学习率 lr</label>
+          <input id="f-lr" type="number" value="0.0002" step="0.00001">
+        </div>
+        <div class="field">
+          <label>噪声调度</label>
+          <select id="f-schedule">
+            <option value="cosine" selected>cosine（推荐）</option>
+            <option value="linear">linear</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>输入通道</label>
+          <select id="f-channels">
+            <option value="3" selected>3 = RGB + 模板 alpha（推荐）</option>
+            <option value="4">4 = 模型自己学 alpha</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>骨架筛选</label>
+          <select id="f-model-type">
+            <option value="classic" selected>classic（Steve，数据集 99.8%）</option>
+            <option value="all">all</option>
+            <option value="slim">slim（样本不足）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>每轮采样间隔 sample-every</label>
+          <input id="f-sample-every" type="number" value="2200" min="50">
+        </div>
+        <div class="field">
+          <label>冒烟步数上限（可选）</label>
+          <input id="f-max-steps" placeholder="留空 = 不限（跑满轮数）">
+          <span class="hint">填 50~200 可先验证「能不能跑通」再开长训练</span>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="hint" style="margin-bottom:6px">将执行的命令：</div>
+        <pre class="cmd" id="cmdPreview">—</pre>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap">
+        <button class="btn primary" id="btnStart">确认启动训练</button>
+        <button class="btn sm" id="btnCtrlNewTag" title="在「继续当前实验」与「新开一个实验名」之间切换，其余参数保持不变">改用新实验名</button>
+        <span class="hint" id="ctrlStatus"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

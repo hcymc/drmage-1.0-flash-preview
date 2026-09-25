@@ -1,0 +1,17 @@
+{
+ "pid": 45168,
+ "ts": 1790160928.579066,
+ "alive_s": 26877.4,
+ "finished": true,
+ "tag": "diff_v2_masked",
+ "script": "21_train_diffusion.py",
+ "epochs": 350,
+ "steps_per_epoch": 2200,
+ "step": 687400,
+ "epoch_idx": 312,
+ "mse": 0.04278,
+ "vram_gb": 4.63,
+ "phase": "train",
+ "reason": "stopped_by_user_archive",
+ "note": "归档快照：这次训练由作者手动停止并冻结为发布权重（687,400 步 / 312 轮，目标 350 轮未跑满），不是异常中断。"
+}

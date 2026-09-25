@@ -1,0 +1,29 @@
+# 运行时产物（各自生成，不入库）
+__pycache__/
+*.pyc
+webui/events.jsonl
+webui/system_history.json
+webui/server.log
+webui/launches.jsonl
+webui/infer/history.jsonl
+webui/infer/exports/
+webui/infer/server.log
+logs/gen_*.log
+logs/generate_*.json
+data/generated/
+exports/
+
+# —— 大文件走 HuggingFace（模型/数据集仓库），不进 GitHub ——
+# 权重（GitHub Releases 提供「推理即用包」）
+models/diff_v1/*.pt
+models/diff_v2_masked/*.pt
+# 数据集本体（HF Dataset 仓库）
+data/processed/*.npy
+data/clean_manifest.csv
+labels/annotations.jsonl
+
+# 评分器的训练缓存（可由 scripts/33_train_lottery_scorer.py generate 重建）
+models/lottery_scorer/*.npy
+
+# 训练快照全量放 HuggingFace，GitHub 只带 docs/img 里的代表图
+logs/samples/
