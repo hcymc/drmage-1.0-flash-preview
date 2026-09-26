@@ -1,19 +1,27 @@
-# drmage-1.0-flash-preview
+<div align="center">
 
-> **实验预览版**（experimental preview）——一个能在 8GB 消费级显卡上训练的
-> Minecraft 皮肤（64×64 RGBA）像素空间扩散模型（DDPM）。
-> 本发布只包含一个模型：**`diff_v2_masked`**（687,400 步 / 312 epoch 的 EMA 权重）。
+<h1 align="center">drmage-1.0-flash-preview</h1>
+<img alt="banner" src="docs/img/banner.png">
 
-`drmage` = drm + image；`flash` = 参数极小（训练有效参数 11.9M）。
-代码内部的路径与 tag 仍为 `diff_v2_masked`，与训练日志、复现文档保持一致；
-`drmage-1.0-flash-preview` 是对外发布名。
+<p>
+  <img alt="version" src="https://img.shields.io/badge/version-v1.0.0-blue">
+  <img alt="status" src="https://img.shields.io/badge/status-experimental_preview-orange">
+  <img alt="model" src="https://img.shields.io/badge/model-diff__v2__masked-green">
+  <img alt="license" src="https://img.shields.io/badge/license-GPL--3.0--or--later-lightgrey">
+</p>
+<p><strong>一个能在 8GB 消费级显卡上训练的 Minecraft 皮肤（64×64 RGBA）像素空间扩散模型（DDPM）</strong></p>
+<p>
+  本发布只包含一个模型：<code>diff_v2_masked</code><br>
+  （687,400 步 / 312 epoch 的 EMA 权重）
+</p>
 
----
+</div>
 
 ## 1. 这是什么
 
-输入一段 36 维条件向量（色调 / 饱和度 / 明度 / 复杂度 / 骨架类型……），
-输出一张 **64×64 RGBA** 的 Minecraft 皮肤（classic / Steve 骨架，4px 手臂）：
+> **实验预览性质的MC皮肤扩散模型**（experimental preview）
+> 输入一段 36 维条件向量（色调 / 饱和度 / 明度 / 复杂度 / 骨架类型……），
+> 输出一张 **64×64 RGBA** 的 Minecraft 皮肤（classic / Steve 骨架，4px 手臂）：
 
 * **像素空间 DDPM**：SmallUNet（base 64）+ cosine schedule（T=1000）+ DDIM 采样；
 * **alpha 与内容解耦**：模型只学 RGB，alpha 由真实皮肤 mask 库检索给出
@@ -34,6 +42,7 @@
 
 ![训练早期](docs/img/sample_step_083600.png)
 ![训练最终](docs/img/sample_step_686400.png)
+![效果预览](docs/img/e.png)
 
 ## 2. 快速开始
 
@@ -91,27 +100,27 @@ python webui/server.py                  # http://127.0.0.1:8848
 
 ## 3. 仓库内容
 
-| 路径 | 说明 |
-|---|---|
-| `models/diff_v2_masked/{ema.pt, latest.pt}` | **发布权重**。`ema.pt`（48MB）出图用；`latest.pt`（190MB）含优化器状态，供续训 |
-| `models/diff_v1/{ema.pt, latest.pt}` | 阶段一预训练权重（两阶段复现链条的中间产物，见 `docs/REPRODUCE.md`） |
-| `models/mask_bank.npz` + `models/alpha_rates.json` | 真实 alpha mask 库（推理时检索）与逐面覆盖率 |
-| `data/processed/*.npy` | 预处理好的数据集：train 105,605 / val 13,200 / test 13,200，`(N,4,64,64) uint8` + 条件矩阵（约 2.2GB，只为训练复现准备；只想推理可整目录删除） |
-| `data/clean_manifest.csv`、`labels/annotations.jsonl` | 数据集宽表清单与四层标注（训练时条件向量从这里构建） |
-| `scripts/` | 数据管线 → 训练 → 生成 → 验证 全链路脚本（见 §5） |
-| `webui/` | 训练监控面板 + 推理实验台（纯 Python 标准库，零第三方依赖） |
-| `logs/diff_v2_masked/` | 这次训练的完整记录：metrics.jsonl（6,342 条）、train.log、损失曲线、275 张固定噪声快照 |
-| `docs/` | `REPRODUCE.md`（从零复现）/ `MODEL_CARD.md`（模型卡：指标、限制、许可）/ `ARCHITECTURE.md`（结构与设计） |
+| 路径                                                      | 说明                                                                                                                                             |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `models/diff_v2_masked/{ema.pt, latest.pt}`             | **发布权重**。`ema.pt`（48MB）出图用；`latest.pt`（190MB）含优化器状态，供续训                                                         |
+| `models/diff_v1/{ema.pt, latest.pt}`                    | 阶段一预训练权重（两阶段复现链条的中间产物，见 `docs/REPRODUCE.md`）                                                                           |
+| `models/mask_bank.npz` + `models/alpha_rates.json`    | 真实 alpha mask 库（推理时检索）与逐面覆盖率                                                                                                     |
+| `data/processed/*.npy`                                  | 预处理好的数据集：train 105,605 / val 13,200 / test 13,200，`(N,4,64,64) uint8` + 条件矩阵（约 2.2GB，只为训练复现准备；只想推理可整目录删除） |
+| `data/clean_manifest.csv`、`labels/annotations.jsonl` | 数据集宽表清单与四层标注（训练时条件向量从这里构建）                                                                                             |
+| `scripts/`                                              | 数据管线 → 训练 → 生成 → 验证 全链路脚本（见 §5）                                                                                            |
+| `webui/`                                                | 训练监控面板 + 推理实验台（纯 Python 标准库，零第三方依赖）                                                                                      |
+| `logs/diff_v2_masked/`                                  | 这次训练的完整记录：metrics.jsonl（6,342 条）、train.log、损失曲线、275 张固定噪声快照                                                           |
+| `docs/`                                                 | `REPRODUCE.md`（从零复现）/ `MODEL_CARD.md`（模型卡：指标、限制、许可）/ `ARCHITECTURE.md`（结构与设计）                                   |
 
 ## 4. 训练概况（详见 MODEL_CARD / REPRODUCE）
 
-| 项 | 值 |
-|---|---|
-| 架构 | SmallUNet base=64 · t_dim=256 · T=1000 cosine · 条件 36 维 |
-| 两阶段 | 阶段一 `diff_v1`（无掩码损失，~81,400 步）→ 阶段二 `diff_v2_masked`（+ 掩码损失，续训至 687,400 步） |
-| 数据 | 132,090 张去重后真实皮肤（三来源，全部 classic），train 105,605 |
-| 硬件 | RTX 2080 SUPER 8GB（峰值显存 4.6GB，batch 48 + AMP） |
-| 最终损失 | masked MSE 0.0428（最优 0.0410），EMA decay 0.9995 |
+| 项       | 值                                                                                                        |
+| -------- | --------------------------------------------------------------------------------------------------------- |
+| 架构     | SmallUNet base=64 · t_dim=256 · T=1000 cosine · 条件 36 维                                             |
+| 两阶段   | 阶段一 `diff_v1`（无掩码损失，~81,400 步）→ 阶段二 `diff_v2_masked`（+ 掩码损失，续训至 687,400 步） |
+| 数据     | 132,090 张去重后真实皮肤（三来源，全部 classic），train 105,605                                           |
+| 硬件     | RTX 2080 SUPER 8GB（峰值显存 4.6GB，batch 48 + AMP）                                                      |
+| 最终损失 | masked MSE 0.0428（最优 0.0410），EMA decay 0.9995                                                        |
 
 ## 5. 全链路脚本（数据从零重建时用；本仓库已附带处理好的数据集）
 
@@ -151,3 +160,4 @@ python webui/server.py                  # http://127.0.0.1:8848
 代码以 **GPL-3.0-or-later** 发布（`LICENSE`）。数据与权重的许可继承了
 上游数据集的条款（Apache-2.0 / MIT），详见 `docs/MODEL_CARD.md` §许可。
 本项目与 Mojang / Microsoft 无关，未被官方认可。
+
